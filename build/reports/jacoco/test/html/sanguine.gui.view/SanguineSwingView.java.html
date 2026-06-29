@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SanguineSwingView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine.gui.view</a> &gt; <span class="el_source">SanguineSwingView.java</span></div><h1>SanguineSwingView.java</h1><pre class="source lang-java linenums">package sanguine.gui.view;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import sanguine.gui.controller.GuiClickListener;
+import sanguine.model.Card;
+import sanguine.model.ReadOnlySanguineModel;
+
+/**
+ * A Swing based implementation of the interface SanguineGuiView.
+ * This class combines the board, score and hand panel to create a complete and coherent
+ * representation of the game of Sanguine.
+ */
+public class SanguineSwingView extends JFrame implements SanguineGuiView {
+
+  private final ReadOnlySanguineModel&lt;Card&gt; model;
+  private final BoardPanel boardPanel;
+  private HandPanel handPanel;
+  private final ScorePanel redScorePanel;
+  private final ScorePanel blueScorePanel;
+
+  private GuiClickListener listener;
+<span class="nc" id="L28">  private int activePlayer = 1;</span>
+
+  /**
+   * Constructor for the GUI view of Sanguine that takes in the Read Only Model.
+   *
+   * @param model the read only model
+   */
+  public SanguineSwingView(ReadOnlySanguineModel&lt;Card&gt; model) {
+<span class="nc" id="L36">    super(&quot;Sanguine&quot;);</span>
+<span class="nc" id="L37">    this.model = model;</span>
+
+<span class="nc" id="L39">    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</span>
+<span class="nc" id="L40">    setLayout(new BorderLayout());</span>
+
+<span class="nc" id="L42">    this.boardPanel = new SanguineBoardPanel(model);</span>
+<span class="nc" id="L43">    this.handPanel = new SanguineHandPanel(model, 1);</span>
+<span class="nc" id="L44">    this.redScorePanel = new SanguineScorePanel(model, 1);</span>
+<span class="nc" id="L45">    this.blueScorePanel = new SanguineScorePanel(model, 2);</span>
+<span class="nc" id="L46">    JButton passButton = new JButton(&quot;Pass Turn&quot;);</span>
+
+<span class="nc" id="L48">    passButton.addActionListener(e -&gt; {</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">      if (listener != null) {</span>
+<span class="nc" id="L50">        listener.onPassClicked();</span>
+      }
+<span class="nc" id="L52">    });</span>
+
+<span class="nc" id="L54">    add(passButton, BorderLayout.NORTH);</span>
+
+<span class="nc" id="L56">    add(boardPanel.asComponent(), BorderLayout.CENTER);</span>
+<span class="nc" id="L57">    add(handPanel.asComponent(), BorderLayout.SOUTH);</span>
+<span class="nc" id="L58">    add(redScorePanel.asComponent(), BorderLayout.WEST);</span>
+<span class="nc" id="L59">    add(blueScorePanel.asComponent(), BorderLayout.EAST);</span>
+
+<span class="nc" id="L61">    installBoardMouseListener();</span>
+
+<span class="nc" id="L63">    pack();</span>
+<span class="nc" id="L64">    setLocationRelativeTo(null);</span>
+<span class="nc" id="L65">    setVisible(true);</span>
+<span class="nc" id="L66">  }</span>
+
+  private void installBoardMouseListener() {
+<span class="nc" id="L69">    boardPanel.asComponent().addMouseListener(new MouseAdapter() {</span>
+      @Override
+      public void mouseClicked(MouseEvent e) {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (listener == null) {</span>
+<span class="nc" id="L73">          return;</span>
+        }
+
+<span class="nc" id="L76">        int row = boardPixelToRow(e.getX(), e.getY());</span>
+<span class="nc" id="L77">        int col = boardPixelToCol(e.getX(), e.getY());</span>
+<span class="nc" id="L78">        System.out.println(&quot;Board clicked at row=&quot; + row + &quot; col=&quot; + col);</span>
+
+<span class="nc" id="L80">        listener.onBoardClicked(row, col);</span>
+<span class="nc" id="L81">      }</span>
+    });
+<span class="nc" id="L83">  }</span>
+
+  @Override
+  public void setClickListener(GuiClickListener listener) {
+<span class="nc" id="L87">    this.listener = listener;</span>
+<span class="nc" id="L88">    handPanel.setCardClickListener(listener);</span>
+<span class="nc" id="L89">  }</span>
+
+  @Override
+  public void render() {
+<span class="nc" id="L93">    boardPanel.asComponent().repaint();</span>
+<span class="nc" id="L94">    handPanel.refresh();</span>
+<span class="nc" id="L95">    redScorePanel.refresh();</span>
+<span class="nc" id="L96">    blueScorePanel.refresh();</span>
+<span class="nc" id="L97">  }</span>
+
+  @Override
+  public int boardPixelToRow(int x, int y) {
+<span class="nc" id="L101">    int height = boardPanel.asComponent().getHeight();</span>
+<span class="nc" id="L102">    int rows = model.getNumRows();</span>
+<span class="nc" id="L103">    return (int) (y / ((double) height / rows));</span>
+  }
+
+  @Override
+  public int boardPixelToCol(int x, int y) {
+<span class="nc" id="L108">    int width = boardPanel.asComponent().getWidth();</span>
+<span class="nc" id="L109">    int cols = model.getNumCols();</span>
+<span class="nc" id="L110">    return (int) (x / ((double) width / cols));</span>
+  }
+
+  @Override
+  public void showMessage(String msg) {
+<span class="nc" id="L115">    JOptionPane.showMessageDialog(this, msg);</span>
+<span class="nc" id="L116">  }</span>
+
+  @Override
+  public BoardPanel getBoardPanel() {
+<span class="nc" id="L120">    return boardPanel;</span>
+  }
+
+  @Override
+  public HandPanel getHandPanel() {
+<span class="nc" id="L125">    return handPanel;</span>
+  }
+
+  @Override
+  public ScorePanel getScorePanel() {
+<span class="nc" id="L130">    return redScorePanel;</span>
+  }
+
+  @Override
+  public void setActivePlayer(int player) {
+<span class="nc" id="L135">    this.activePlayer = player;</span>
+
+<span class="nc" id="L137">    this.remove(handPanel.asComponent());</span>
+
+<span class="nc" id="L139">    HandPanel newPanel = new SanguineHandPanel(model, player);</span>
+<span class="nc" id="L140">    this.handPanel = newPanel;</span>
+
+<span class="nc bnc" id="L142" title="All 2 branches missed.">    if (listener != null) {</span>
+<span class="nc" id="L143">      handPanel.setCardClickListener(listener);</span>
+    }
+
+<span class="nc" id="L146">    this.add(handPanel.asComponent(), BorderLayout.SOUTH);</span>
+
+<span class="nc" id="L148">    revalidate();</span>
+<span class="nc" id="L149">    repaint();</span>
+<span class="nc" id="L150">  }</span>
+
+  @Override
+  public void setSelectedCardIndex(int index) {
+<span class="nc" id="L154">    handPanel.setSelectedCardIndex(index);</span>
+<span class="nc" id="L155">  }</span>
+
+  @Override
+  public Component asComponent() {
+<span class="nc" id="L159">    return this;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Sanguine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine</a> &gt; <span class="el_source">Sanguine.java</span></div><h1>Sanguine.java</h1><pre class="source lang-java linenums">package sanguine;
+
+import java.io.InputStreamReader;
+import java.util.List;
+import sanguine.controller.SanguineTextualController;
+import sanguine.model.BasicSanguine;
+import sanguine.model.Card;
+import sanguine.model.SanguineModel;
+
+/**
+ * Represents the game of Sanguine in a playable format.
+ */
+<span class="nc" id="L13">public class Sanguine {</span>
+
+  /**
+   * Plays sanguine using the arguments which represents the starting hand. If arguments are not
+   * stated then starting hand is set to the default of 5.
+   *
+   * @param args the starting hand size
+   */
+  public static void main(String[] args) {
+
+<span class="nc" id="L23">    int startingSize = 5;</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">    if (args.length == 1) {</span>
+<span class="nc" id="L25">      startingSize = Integer.parseInt(args[0]);</span>
+    }
+<span class="nc bnc" id="L27" title="All 2 branches missed.">    if (args.length &gt; 1) {</span>
+<span class="nc" id="L28">      throw new IllegalArgumentException(&quot;Must provide a single argument: the starting Size&quot;);</span>
+    }
+
+<span class="nc" id="L31">    SanguineModel&lt;Card&gt; model = new BasicSanguine();</span>
+<span class="nc" id="L32">    List&lt;Card&gt; p1deck = model.createNewDeck();</span>
+<span class="nc" id="L33">    List&lt;Card&gt; p2deck = model.createNewDeck();</span>
+
+<span class="nc" id="L35">    SanguineTextualController controller =</span>
+        new SanguineTextualController(new InputStreamReader(System.in), System.out);
+
+<span class="nc" id="L38">    controller.playGame(model, p1deck, p2deck, startingSize);</span>
+<span class="nc" id="L39">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="sanguine.SanguineModelTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-12-06T05:25:39" hostname="LAPTOP-46DE89F1" time="0.031">
+  <properties/>
+  <testcase name="startGameRejectsMoreThanTwoCopiesByName" classname="sanguine.SanguineModelTests" time="0.031"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

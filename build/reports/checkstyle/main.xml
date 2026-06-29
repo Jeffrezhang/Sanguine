@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.23.1">
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\controller\SanguineController.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\controller\SanguineTextualController.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\AiMove.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\AiStrategy.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\Communicator.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\FillFirstAi.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\GameCoordinator.java">
+<error line="23" severity="warning" message="First sentence of Javadoc is missing an ending period." source="com.puppycrawl.tools.checkstyle.checks.javadoc.SummaryJavadocCheck"/>
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\GuiClickListener.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\ProxyController.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\ProxyModel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\ProxySanguineModel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\RowScoreAi.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\SanguineCommunicator.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\SanguineGuiController.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\SanguineProxyController.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\controller\TurnListener.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\player\AiGamePlayer.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\player\GamePlayer.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\player\HumanGamePlayer.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\player\PlayerActionListener.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\SanguineGame.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\BoardPanel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\CardWidget.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\HandPanel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\SanguineBoardPanel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\SanguineCardWidget.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\SanguineGuiView.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\SanguineHandPanel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\SanguineScorePanel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\SanguineSwingView.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\gui\view\ScorePanel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\BasicSanguine.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\Card.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\Pawn.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\Player.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\PlayerType.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\ReadOnlyBasicSanguine.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\ReadOnlySanguineModel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\SanguineCard.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\SanguineModel.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\SanguinePawn.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\model\SanguinePlayer.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\Sanguine.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\view\SanguineTextualView.java">
+</file>
+<file name="C:\Users\brend\cs3100\f25-hw07-groups-group-SixSevenMonsters\src\main\java\sanguine\view\TextualView.java">
+</file>
+</checkstyle>

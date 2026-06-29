@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SanguineBoardPanel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine.gui.view</a> &gt; <span class="el_source">SanguineBoardPanel.java</span></div><h1>SanguineBoardPanel.java</h1><pre class="source lang-java linenums">package sanguine.gui.view;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import javax.swing.JPanel;
+import sanguine.model.Pawn;
+import sanguine.model.ReadOnlySanguineModel;
+
+/**
+ * Implements the Board panel to represent a Swing component that draws the sanguine board.
+ */
+public class SanguineBoardPanel extends JPanel implements BoardPanel {
+
+  private final ReadOnlySanguineModel model;
+<span class="nc" id="L17">  private int highlightRow = -1;</span>
+<span class="nc" id="L18">  private int highlightCol = -1;</span>
+
+  /**
+   * Creates a board panel that uses the given model for rendering.
+   *
+   * @param model the read-only model containing board state
+   */
+<span class="nc" id="L25">  public SanguineBoardPanel(ReadOnlySanguineModel model) {</span>
+<span class="nc" id="L26">    this.model = model;</span>
+<span class="nc" id="L27">    setPreferredSize(new Dimension(model.getNumCols() * 100,</span>
+<span class="nc" id="L28">        model.getNumRows() * 100));</span>
+<span class="nc" id="L29">  }</span>
+
+  @Override
+  public Component asComponent() {
+<span class="nc" id="L33">    return this;</span>
+  }
+
+  @Override
+  protected void paintComponent(Graphics g) {
+<span class="nc" id="L38">    super.paintComponent(g);</span>
+<span class="nc" id="L39">    drawBoardBackground(g);</span>
+<span class="nc" id="L40">    drawCells(g);</span>
+<span class="nc" id="L41">    drawHighlight(g);</span>
+<span class="nc" id="L42">  }</span>
+
+  private void drawHighlight(Graphics g) {
+<span class="nc bnc" id="L45" title="All 4 branches missed.">    if (highlightRow &lt; 0 || highlightCol &lt; 0) {</span>
+<span class="nc" id="L46">      return;</span>
+    }
+
+<span class="nc" id="L49">    int rows = model.getNumRows();</span>
+<span class="nc" id="L50">    int cols = model.getNumCols();</span>
+<span class="nc" id="L51">    int cellWidth = getWidth() / cols;</span>
+<span class="nc" id="L52">    int cellHeight = getHeight() / rows;</span>
+
+<span class="nc" id="L54">    int x = highlightCol * cellWidth;</span>
+<span class="nc" id="L55">    int y = highlightRow * cellHeight;</span>
+
+<span class="nc" id="L57">    g.setColor(Color.YELLOW);</span>
+<span class="nc" id="L58">    g.drawRect(x, y, cellWidth - 1, cellHeight - 1);</span>
+<span class="nc" id="L59">    g.drawRect(x + 1, y + 1, cellWidth - 3, cellHeight - 3);</span>
+<span class="nc" id="L60">  }</span>
+
+  @Override
+  public void setHighlight(int row, int col) {
+<span class="nc" id="L64">    this.highlightRow = row;</span>
+<span class="nc" id="L65">    this.highlightCol = col;</span>
+<span class="nc" id="L66">    repaint();</span>
+<span class="nc" id="L67">  }</span>
+
+  @Override
+  public void clearHighlight() {
+<span class="nc" id="L71">    this.highlightRow = -1;</span>
+<span class="nc" id="L72">    this.highlightCol = -1;</span>
+<span class="nc" id="L73">    repaint();</span>
+<span class="nc" id="L74">  }</span>
+
+  /**
+   * Draws the background of the board.
+   */
+  private void drawBoardBackground(Graphics g) {
+<span class="nc" id="L80">    int rows = model.getNumRows();</span>
+<span class="nc" id="L81">    int cols = model.getNumCols();</span>
+<span class="nc" id="L82">    int cellWidth = getWidth() / cols;</span>
+<span class="nc" id="L83">    int cellHeight = getHeight() / rows;</span>
+
+<span class="nc" id="L85">    g.setColor(Color.LIGHT_GRAY);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">    for (int r = 0; r &lt; rows; r++) {</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">      for (int c = 0; c &lt; cols; c++) {</span>
+<span class="nc" id="L88">        int x = c * cellWidth;</span>
+<span class="nc" id="L89">        int y = r * cellHeight;</span>
+<span class="nc" id="L90">        g.fillRect(x, y, cellWidth, cellHeight);</span>
+<span class="nc" id="L91">        g.setColor(Color.DARK_GRAY);</span>
+<span class="nc" id="L92">        g.drawRect(x, y, cellWidth, cellHeight);</span>
+<span class="nc" id="L93">        g.setColor(Color.LIGHT_GRAY);</span>
+      }
+    }
+<span class="nc" id="L96">  }</span>
+
+  /**
+   * Draws each cell of the board based on model state.
+   */
+  private void drawCells(Graphics g) {
+<span class="nc" id="L102">    int rows = model.getNumRows();</span>
+<span class="nc" id="L103">    int cols = model.getNumCols();</span>
+
+<span class="nc" id="L105">    int cellWidth = getWidth() / cols;</span>
+<span class="nc" id="L106">    int cellHeight = getHeight() / rows;</span>
+
+<span class="nc bnc" id="L108" title="All 2 branches missed.">    for (int r = 0; r &lt; rows; r++) {</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">      for (int c = 0; c &lt; cols; c++) {</span>
+
+<span class="nc" id="L111">        char cell = model.getCell(r, c);</span>
+<span class="nc" id="L112">        int x = c * cellWidth;</span>
+<span class="nc" id="L113">        int y = r * cellHeight;</span>
+
+        // draw background for pawns based on owner
+<span class="nc" id="L116">        Pawn pawn = model.getPawnAt(r, c);</span>
+<span class="nc bnc" id="L117" title="All 6 branches missed.">        if (pawn != null &amp;&amp; cell != 'R' &amp;&amp; cell != 'B') {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">          if (pawn.getOwner() == 1) {</span>
+<span class="nc" id="L119">            g.setColor(new Color(255, 200, 200)); // light red</span>
+          } else {
+<span class="nc" id="L121">            g.setColor(new Color(200, 200, 255)); // light blue</span>
+          }
+<span class="nc" id="L123">          g.fillRect(x, y, cellWidth, cellHeight);</span>
+<span class="nc" id="L124">          g.setColor(Color.BLACK);</span>
+<span class="nc" id="L125">          g.drawRect(x, y, cellWidth, cellHeight);</span>
+        }
+
+<span class="nc" id="L128">        drawCell(g, cell, x, y, cellWidth, cellHeight);</span>
+      }
+    }
+<span class="nc" id="L131">  }</span>
+
+  /**
+   * Draws a single cell depending on content.
+   */
+  private void drawCell(Graphics g, char cell, int x, int y,
+                        int cellWidth, int cellHeight) {
+
+<span class="nc bnc" id="L139" title="All 4 branches missed.">    if (cell == 'R' || cell == 'B') {</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">      g.setColor(cell == 'R' ? Color.RED : Color.BLUE);</span>
+<span class="nc" id="L141">      g.fillRect(x + 5, y + 5, cellWidth - 10, cellHeight - 10);</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">    } else if (Character.isDigit(cell)) {</span>
+<span class="nc" id="L143">      g.setColor(Color.BLACK);</span>
+<span class="nc" id="L144">      g.drawString(String.valueOf(cell),</span>
+          x + cellWidth / 2, y + cellHeight / 2);
+    }
+<span class="nc" id="L147">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SanguineGame.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine.gui</a> &gt; <span class="el_source">SanguineGame.java</span></div><h1>SanguineGame.java</h1><pre class="source lang-java linenums">package sanguine.gui;
+
+import java.util.List;
+import sanguine.gui.controller.FillFirstAi;
+import sanguine.gui.controller.GameCoordinator;
+import sanguine.gui.controller.ProxyController;
+import sanguine.gui.controller.ProxyModel;
+import sanguine.gui.controller.ProxySanguineModel;
+import sanguine.gui.controller.RowScoreAi;
+import sanguine.gui.controller.SanguineCommunicator;
+import sanguine.gui.controller.SanguineGuiController;
+import sanguine.gui.controller.SanguineProxyController;
+import sanguine.gui.player.AiGamePlayer;
+import sanguine.gui.player.GamePlayer;
+import sanguine.gui.player.HumanGamePlayer;
+import sanguine.gui.view.SanguineGuiView;
+import sanguine.gui.view.SanguineSwingView;
+import sanguine.model.BasicSanguine;
+import sanguine.model.Card;
+import sanguine.model.PlayerType;
+import sanguine.model.ReadOnlyBasicSanguine;
+import sanguine.model.ReadOnlySanguineModel;
+import sanguine.model.SanguineModel;
+
+/**
+ * Starts and plays a game of Sanguine that includes two different players, these players are
+ * represented by their own class. Players have their own controllers as well.
+ */
+<span class="nc" id="L29">public class SanguineGame {</span>
+
+  /**
+   * Plays a game of Sanguine.
+   *
+   * @param args the arguments used to set up the game, may whether the red player is human or
+   *             AI and whether the blue player is human or AI. Defaults are set as human if no
+   *             arguments are given.
+   */
+  public static void main(String[] args) {
+
+<span class="nc bnc" id="L40" title="All 2 branches missed.">    String redTypeArg = (args.length &gt; 0) ? args[0].toLowerCase() : &quot;human&quot;;</span>
+<span class="nc bnc" id="L41" title="All 2 branches missed.">    String blueTypeArg = (args.length &gt; 1) ? args[1].toLowerCase() : &quot;human&quot;;</span>
+<span class="nc" id="L42">    SanguineModel&lt;Card&gt; real = new BasicSanguine();</span>
+<span class="nc" id="L43">    ReadOnlySanguineModel&lt;Card&gt; readOnly = new ReadOnlyBasicSanguine(real);</span>
+<span class="nc" id="L44">    ProxyController proxyController = new SanguineProxyController(real);</span>
+<span class="nc" id="L45">    SanguineCommunicator communicator =</span>
+        new SanguineCommunicator((SanguineProxyController) proxyController);
+<span class="nc" id="L47">    ProxyModel proxyModel =</span>
+        new ProxySanguineModel(readOnly, communicator);
+
+<span class="nc" id="L50">    List&lt;Card&gt; p1Deck = real.createNewDeck();</span>
+<span class="nc" id="L51">    List&lt;Card&gt; p2Deck = real.createNewDeck();</span>
+<span class="nc" id="L52">    PlayerType p1Type = parsePlayerType(redTypeArg);</span>
+<span class="nc" id="L53">    PlayerType p2Type = parsePlayerType(blueTypeArg);</span>
+
+<span class="nc" id="L55">    real.startGame(p1Deck, p2Deck, p1Type, p2Type, 5);</span>
+<span class="nc" id="L56">    SanguineGuiView view1 = new SanguineSwingView(readOnly);</span>
+<span class="nc" id="L57">    SanguineGuiView view2 = new SanguineSwingView(readOnly);</span>
+
+<span class="nc" id="L59">    GamePlayer player1 = makeGamePlayer(1, p1Type, readOnly, proxyModel);</span>
+<span class="nc" id="L60">    GamePlayer player2 = makeGamePlayer(2, p2Type, readOnly, proxyModel);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">    boolean redIsHuman = (p1Type == PlayerType.Human);</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">    boolean blueIsHuman = (p2Type == PlayerType.Human);</span>
+
+<span class="nc" id="L64">    SanguineGuiController controller1 =</span>
+        new SanguineGuiController(
+            1,
+            redIsHuman,
+            view1,
+            readOnly,
+            (ProxySanguineModel) proxyModel,
+            player1);
+<span class="nc" id="L72">    SanguineGuiController controller2 =</span>
+        new SanguineGuiController(
+            2,
+            blueIsHuman,
+            view2,
+            readOnly,
+            (ProxySanguineModel) proxyModel,
+            player2);
+
+<span class="nc" id="L81">    GameCoordinator coordinator = new GameCoordinator(controller1, controller2);</span>
+<span class="nc" id="L82">    controller1.setTurnListener(coordinator);</span>
+<span class="nc" id="L83">    controller2.setTurnListener(coordinator);</span>
+<span class="nc" id="L84">    coordinator.startGame();</span>
+<span class="nc" id="L85">  }</span>
+
+  /**
+   * Helper to turn the player type string into a player type enum.
+   *
+   * @param s the string representing the player type
+   * @return the enum of the corresponding player type
+   */
+  private static PlayerType parsePlayerType(String s) {
+<span class="nc bnc" id="L94" title="All 4 branches missed.">    return switch (s) {</span>
+<span class="nc" id="L95">      case &quot;human&quot; -&gt; PlayerType.Human;</span>
+<span class="nc" id="L96">      case &quot;fillfirst&quot; -&gt; PlayerType.AI;</span>
+<span class="nc" id="L97">      case &quot;rowscore&quot; -&gt; PlayerType.ROWSCOREAI;</span>
+      default -&gt; {
+<span class="nc" id="L99">        System.out.println(&quot;Unknown player type '&quot; + s</span>
+            + &quot;', defaulting to human.&quot;);
+<span class="nc" id="L101">        yield PlayerType.Human;</span>
+      }
+    };
+  }
+
+  /**
+   * Builds a Sanguine game player with the given parameters.
+   *
+   * @param id the id of the player.
+   * @param type the player type of the player
+   * @param model the model the player is using.
+   * @param proxy the proxy model the player is using
+   * @return the player after creation.
+   */
+  private static GamePlayer makeGamePlayer(
+      int id,
+      PlayerType type,
+      ReadOnlySanguineModel&lt;Card&gt; model,
+      ProxyModel&lt;Card&gt; proxy) {
+
+<span class="nc bnc" id="L121" title="All 4 branches missed.">    return switch (type) {</span>
+<span class="nc" id="L122">      case Human -&gt; new HumanGamePlayer(id);</span>
+      case AI -&gt;
+<span class="nc" id="L124">          new AiGamePlayer(id, new FillFirstAi(), model, proxy);</span>
+<span class="nc" id="L125">      case ROWSCOREAI -&gt; new AiGamePlayer(id, new RowScoreAi(), model, proxy);</span>
+      default -&gt;
+<span class="nc" id="L127">          new HumanGamePlayer(id);</span>
+    };
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

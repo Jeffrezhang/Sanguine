@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SanguineTextualView.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine.view</a> &gt; <span class="el_source">SanguineTextualView.java</span></div><h1>SanguineTextualView.java</h1><pre class="source lang-java linenums">package sanguine.view;
+
+import static java.lang.System.out;
+
+import java.io.IOException;
+import sanguine.model.Card;
+import sanguine.model.SanguineModel;
+
+/**
+ * implements TextualView to represent a SanguineModel in a textual view.
+ */
+public class SanguineTextualView implements TextualView {
+
+  private final SanguineModel&lt;Card&gt; model;
+  private Appendable builder;
+
+  /**
+   * The constructor of the textual view that takes in a model and sets its model equal to the
+   * model.
+   *
+   * @param model the model of Sanguine being taken in
+   */
+<span class="nc" id="L23">  public SanguineTextualView(SanguineModel&lt;Card&gt; model) {</span>
+
+<span class="nc bnc" id="L25" title="All 2 branches missed.">    if (model == null) {</span>
+<span class="nc" id="L26">      throw new NullPointerException(&quot;model is null&quot;);</span>
+    }
+<span class="nc" id="L28">    this.model = model;</span>
+<span class="nc" id="L29">    this.builder = new StringBuilder();</span>
+<span class="nc" id="L30">  }</span>
+
+  /**
+   * This is the constructor for the textual view version.
+   *
+   * @param model takes in the model to know what to display.
+   * @param builder the builder to make it.
+   */
+<span class="nc" id="L38">  public SanguineTextualView(SanguineModel&lt;Card&gt; model, Appendable builder) {</span>
+
+<span class="nc bnc" id="L40" title="All 4 branches missed.">    if (model == null || builder == null) {</span>
+<span class="nc" id="L41">      throw new NullPointerException(&quot;arguments cannot be null&quot;);</span>
+    }
+
+<span class="nc" id="L44">    this.model = model;</span>
+<span class="nc" id="L45">    this.builder = builder;</span>
+<span class="nc" id="L46">  }</span>
+
+  private Appendable build() {
+
+    //builds the board in a String representation
+    try {
+
+<span class="nc" id="L53">      int numRows = model.getNumRows();</span>
+<span class="nc" id="L54">      int numCols = model.getNumCols();</span>
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">      for (int row = 0; row &lt; numRows; row++) {</span>
+<span class="nc" id="L57">        builder.append(String.valueOf(model.getRowScore(row, 1))).append(&quot; &quot;);</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        for (int col = 0; col &lt; numCols; col++) {</span>
+
+<span class="nc" id="L60">          builder.append(model.getCell(row, col));</span>
+        }
+<span class="nc" id="L62">        builder.append(&quot; &quot;).append(String.valueOf(model.getRowScore(row, 2)))</span>
+<span class="nc" id="L63">            .append(System.lineSeparator());</span>
+      }
+<span class="nc" id="L65">      builder.append(System.lineSeparator());</span>
+<span class="nc" id="L66">    } catch (IOException e) {</span>
+<span class="nc" id="L67">      throw new IllegalStateException(&quot;Append Failed&quot;, e);</span>
+<span class="nc" id="L68">    }</span>
+<span class="nc" id="L69">    return builder;</span>
+  }
+
+  @Override
+  public void render() {
+
+    //renders the board that has been built
+<span class="nc" id="L76">    out.append(build().toString());</span>
+<span class="nc" id="L77">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

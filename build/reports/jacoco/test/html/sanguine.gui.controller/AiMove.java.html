@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AiMove.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine.gui.controller</a> &gt; <span class="el_source">AiMove.java</span></div><h1>AiMove.java</h1><pre class="source lang-java linenums">package sanguine.gui.controller;
+
+/**
+ * This class is for the AI player movement.
+ */
+public class AiMove {
+  private final boolean pass;
+  private final int cardIndex;
+  private final int row;
+  private final int col;
+
+  /**
+   * THis is the constructor for the AI to make a move.
+   *
+   * @param pass if the AI passes their turn.
+   * @param cardIndex the Card that the AI wants to place.
+   * @param row what row the AI wants to place the card.
+   * @param col what column the AI wants to place the card.
+   */
+<span class="nc" id="L20">  private AiMove(boolean pass, int cardIndex, int row, int col) {</span>
+<span class="nc" id="L21">    this.pass = pass;</span>
+<span class="nc" id="L22">    this.cardIndex = cardIndex;</span>
+<span class="nc" id="L23">    this.row = row;</span>
+<span class="nc" id="L24">    this.col = col;</span>
+<span class="nc" id="L25">  }</span>
+
+  /**
+   * the method is used to implement passing/giving up their turn.
+   *
+   * @return updates the move as a pass.
+   */
+  public static AiMove pass() {
+<span class="nc" id="L33">    return new AiMove(true, -1, -1, -1);</span>
+  }
+
+  /**
+   * Goes through columns and rows to place their selected card.
+   *
+   * @param cardIndex the card that the AI wants to use.
+   * @param row the row where the AI wants to place the card.
+   * @param col the column where the AI wants to place.
+   * @return updates the game so that it shows the AI made a move that places a card.
+   */
+  public static AiMove place(int cardIndex, int row, int col) {
+<span class="nc" id="L45">    return new AiMove(false, cardIndex, row, col);</span>
+  }
+
+  public boolean isPass() {
+<span class="nc" id="L49">    return pass;</span>
+  }
+
+  public int getCardIndex() {
+<span class="nc" id="L53">    return cardIndex;</span>
+  }
+
+  public int getRow() {
+<span class="nc" id="L57">    return row;</span>
+  }
+
+  public int getCol() {
+<span class="nc" id="L61">    return col;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

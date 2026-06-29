@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SanguineProxyController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine.gui.controller</a> &gt; <span class="el_source">SanguineProxyController.java</span></div><h1>SanguineProxyController.java</h1><pre class="source lang-java linenums">package sanguine.gui.controller;
+
+import sanguine.model.Card;
+import sanguine.model.Pawn;
+import sanguine.model.SanguineModel;
+
+/**
+ * Thin controller that receives commands from the communicator and forwards
+ * them directly to the real model.
+ */
+public class SanguineProxyController implements ProxyController {
+
+  private final SanguineModel&lt;Card&gt; realModel;
+
+  /**
+   * Constructor for the Proxy Model.
+   *
+   * @param realModel takes in the real model so that we can use the proxy instead.
+   */
+<span class="nc" id="L20">  public SanguineProxyController(SanguineModel&lt;Card&gt; realModel) {</span>
+<span class="nc" id="L21">    this.realModel = realModel;</span>
+<span class="nc" id="L22">  }</span>
+
+  @Override
+  public void execute(String method, Object... args) {
+
+<span class="nc bnc" id="L27" title="All 4 branches missed.">    switch (method) {</span>
+      case &quot;placeCard&quot;:
+        {
+<span class="nc" id="L30">        int player   = (int) args[0];</span>
+<span class="nc" id="L31">        String name  = (String) args[1];</span>
+<span class="nc" id="L32">        int row      = (int) args[2];</span>
+<span class="nc" id="L33">        int col      = (int) args[3];</span>
+
+<span class="nc" id="L35">        Card card = findCardInHand(player, name);</span>
+<span class="nc" id="L36">        realModel.placeCard(row, col, player, card);</span>
+<span class="nc" id="L37">        return;</span>
+        }
+      case &quot;pass&quot;:
+        {
+<span class="nc" id="L41">        realModel.pass();</span>
+<span class="nc" id="L42">        return;</span>
+        }
+      case &quot;drawCard&quot;:
+        {
+<span class="nc" id="L46">        int player = (int) args[0];</span>
+<span class="nc" id="L47">        realModel.drawCard(player);</span>
+<span class="nc" id="L48">        return;</span>
+        }
+      default:
+<span class="nc" id="L51">        throw new IllegalArgumentException(&quot;Unknown method: &quot; + method);</span>
+    }
+  }
+
+  @Override
+  public boolean checkLegalPlacement(int player, Card card, int row, int col) {
+
+    try {
+
+<span class="nc" id="L60">      dryRunPlaceCard(row, col, player, card);</span>
+<span class="nc" id="L61">      return true;</span>
+
+<span class="nc" id="L63">    } catch (Exception e) {</span>
+<span class="nc" id="L64">      return false;</span>
+    }
+  }
+
+  /**
+   * A dry run of placeCard that checks legality without sending it to the model.
+   */
+  private void dryRunPlaceCard(int row, int col, int player, Card card) {
+<span class="nc bnc" id="L72" title="All 6 branches missed.">    if (row &lt; 0 || row &gt;= realModel.getNumRows()</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">        || col &lt; 0 || col &gt;= realModel.getNumCols()) {</span>
+<span class="nc" id="L74">      throw new IllegalArgumentException(&quot;Out of bounds&quot;);</span>
+    }
+
+<span class="nc" id="L77">    char cellChar = realModel.getCell(row, col);</span>
+<span class="nc bnc" id="L78" title="All 4 branches missed.">    if (cellChar == 'R' || cellChar == 'B') {</span>
+<span class="nc" id="L79">      throw new IllegalStateException(&quot;Cell already has a card&quot;);</span>
+    }
+
+<span class="nc" id="L82">    int cost = card.getCost();</span>
+<span class="nc" id="L83">    Pawn pawn = realModel.getPawnAt(row, col);</span>
+
+<span class="nc bnc" id="L85" title="All 6 branches missed.">    if (pawn == null || pawn.getOwner() != player || pawn.getCount() &lt; cost) {</span>
+<span class="nc" id="L86">      throw new IllegalStateException(&quot;Not enough pawns or enemy pawns present&quot;);</span>
+    }
+<span class="nc" id="L88">  }</span>
+
+  /**
+   * Finds a card by name in the player's hand.
+   */
+  private Card findCardInHand(int player, String name) {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">    for (Card c : realModel.getHand(player)) {</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">      if (c.getName().equalsIgnoreCase(name)) {</span>
+<span class="nc" id="L96">        return c;</span>
+      }
+<span class="nc" id="L98">    }</span>
+<span class="nc" id="L99">    throw new IllegalArgumentException(&quot;Card not found in hand: &quot; + name);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SanguineTextualController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine.controller</a> &gt; <span class="el_source">SanguineTextualController.java</span></div><h1>SanguineTextualController.java</h1><pre class="source lang-java linenums">package sanguine.controller;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Scanner;
+import sanguine.model.Card;
+import sanguine.model.PlayerType;
+import sanguine.model.SanguineModel;
+import sanguine.view.SanguineTextualView;
+
+/**
+ * The implementation of the SanguineController in the textual form: all inputs and outputs
+ * are through text.
+ */
+public class SanguineTextualController implements SanguineController {
+
+  private Readable reader;
+  private Appendable builder;
+  private SanguineModel model;
+  private SanguineTextualView view;
+
+  /**
+   * The constructor of the textual controller that takes in a readable and appendable to set the
+   * controllers reader and builder equal to.
+   *
+   * @param rd the readable that is being taken in
+   * @param ap the appendable that is being taken in
+   */
+<span class="nc" id="L29">  public SanguineTextualController(Readable rd, Appendable ap) {</span>
+
+<span class="nc bnc" id="L31" title="All 4 branches missed.">    if (rd == null || ap == null) {</span>
+<span class="nc" id="L32">      throw new IllegalArgumentException(&quot;Arguments cannot be null&quot;);</span>
+    }
+
+<span class="nc" id="L35">    reader = rd;</span>
+<span class="nc" id="L36">    builder = ap;</span>
+<span class="nc" id="L37">  }</span>
+
+  @Override
+  public &lt;C extends Card&gt; void playGame(SanguineModel&lt;C&gt; model, List&lt;C&gt; p1deck, List&lt;C&gt; p2deck,
+                                        int startingSize) {
+<span class="nc bnc" id="L42" title="All 6 branches missed.">    if (model == null || p1deck == null || p2deck == null) {</span>
+<span class="nc" id="L43">      throw new IllegalArgumentException(&quot;Arguments cannot be null&quot;);</span>
+    }
+<span class="nc bnc" id="L45" title="All 2 branches missed.">    if (startingSize &lt; 0) {</span>
+<span class="nc" id="L46">      writeMessage(&quot;Starting size cannot be negative&quot;);</span>
+<span class="nc" id="L47">      return;</span>
+    }
+
+<span class="nc" id="L50">    this.model = model;</span>
+<span class="nc" id="L51">    this.model.startGame(p1deck, p2deck, PlayerType.Human, PlayerType.Human, startingSize);</span>
+<span class="nc" id="L52">    view = new SanguineTextualView(this.model, builder);</span>
+
+<span class="nc" id="L54">    Scanner sc = new Scanner(reader);</span>
+    String name;
+    int row;
+    int col;
+<span class="nc" id="L58">    int playerTurn = 0;</span>
+
+<span class="nc" id="L60">    welcomeMessage();</span>
+    do {
+      //renders the view and then prompts the current player for a move
+<span class="nc" id="L63">      view.render();</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">      if (!model.isGameOver()) {</span>
+<span class="nc" id="L65">        writeMessage(&quot;Player &quot; + ((playerTurn % 2) + 1) + &quot;'s turn.&quot; + System.lineSeparator());</span>
+<span class="nc" id="L66">        writeMessage(&quot;Type Instructions (Card Name, Row, Column) or 'pass': &quot;</span>
+<span class="nc" id="L67">            + System.lineSeparator());</span>
+      }
+<span class="nc" id="L69">      String line = sc.nextLine().trim();</span>
+      //if the player chooses to pass it passes the turn then renders the board and continues
+      //the loop
+<span class="nc bnc" id="L72" title="All 2 branches missed.">      if (line.trim().equalsIgnoreCase(&quot;pass&quot;)) {</span>
+<span class="nc" id="L73">        model.pass();</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (!model.isGameOver()) {</span>
+<span class="nc" id="L75">          writeMessage(&quot;Turn passed. Next players move.&quot; + System.lineSeparator());</span>
+<span class="nc" id="L76">          view.render();</span>
+<span class="nc" id="L77">          writeMessage(&quot;Type Instructions (Card Name, Row, Column) or 'pass': &quot;</span>
+<span class="nc" id="L78">              + System.lineSeparator());</span>
+        }
+<span class="nc" id="L80">        playerTurn++;</span>
+<span class="nc" id="L81">        continue;</span>
+      }
+
+      //if the player didn't pass then that means to number of tokens should be equal to 3
+<span class="nc" id="L85">      String[] tokens = line.split(&quot; &quot;);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">      if (tokens.length != 3) {</span>
+<span class="nc" id="L87">        writeMessage(&quot;Wrong number of tokens: Format: &lt;CardName&gt; &lt;Row&gt; &lt;Col&gt; or 'pass'&quot;</span>
+<span class="nc" id="L88">            + System.lineSeparator());</span>
+<span class="nc" id="L89">        continue;</span>
+      }
+
+      //sets the variables equal to the corresponding tokens while checking for exceptions
+<span class="nc" id="L93">      name = tokens[0];</span>
+      try {
+<span class="nc" id="L95">        row = Integer.parseInt(tokens[1]);</span>
+<span class="nc" id="L96">        col = Integer.parseInt(tokens[2]);</span>
+<span class="nc" id="L97">      } catch (NumberFormatException e) {</span>
+<span class="nc" id="L98">        writeMessage(&quot;Invalid coordinates. Please enter numbers for row and col.&quot;</span>
+<span class="nc" id="L99">            + System.lineSeparator());</span>
+<span class="nc" id="L100">        continue;</span>
+<span class="nc" id="L101">      }</span>
+
+      //checks if the player actually has the card they want to play in hand
+<span class="nc" id="L104">      int currentPlayer = (playerTurn % 2) + 1;</span>
+<span class="nc" id="L105">      List&lt;Card&gt; hand = model.getHand(currentPlayer);</span>
+<span class="nc" id="L106">      Card cardInHand = null;</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">      for (Card card : hand) {</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        if (card.getName().equalsIgnoreCase(name)) {</span>
+<span class="nc" id="L109">          cardInHand = card;</span>
+<span class="nc" id="L110">          break;</span>
+        }
+<span class="nc" id="L112">      }</span>
+
+      //if the card is in player hand then attempt to make the move
+<span class="nc bnc" id="L115" title="All 2 branches missed.">      if (cardInHand != null) {</span>
+        try {
+<span class="nc" id="L117">          model.placeCard(row, col, currentPlayer, cardInHand);</span>
+<span class="nc" id="L118">          model.drawCard(currentPlayer);</span>
+<span class="nc" id="L119">          writeMessage(&quot;Move successful! Player &quot; + currentPlayer + &quot; placed &quot; + name + &quot;.&quot;</span>
+<span class="nc" id="L120">              + System.lineSeparator());</span>
+<span class="nc" id="L121">          writeMessage(&quot;Next player's turn.&quot; + System.lineSeparator());</span>
+<span class="nc" id="L122">          writeMessage(&quot;Type Instructions (Card Name, Row, Column) or 'pass': &quot;</span>
+<span class="nc" id="L123">              + System.lineSeparator());</span>
+<span class="nc" id="L124">        } catch (IllegalArgumentException | IllegalStateException e) {</span>
+<span class="nc" id="L125">          writeMessage(&quot;Invalid move: &quot; + e.getMessage() + System.lineSeparator());</span>
+<span class="nc" id="L126">          continue;</span>
+<span class="nc" id="L127">        }</span>
+      } else {
+<span class="nc" id="L129">        writeMessage(&quot;Card not in hand&quot;);</span>
+<span class="nc" id="L130">        continue;</span>
+      }
+
+<span class="nc" id="L133">      playerTurn++;</span>
+<span class="nc bnc" id="L134" title="All 4 branches missed.">    } while (!model.isGameOver() &amp;&amp; sc.hasNextLine());</span>
+
+<span class="nc" id="L136">    int p1Score = model.getPlayerScore(1);</span>
+<span class="nc" id="L137">    int p2Score = model.getPlayerScore(2);</span>
+
+<span class="nc" id="L139">    writeMessage(&quot;P1 score: &quot; + p1Score + System.lineSeparator());</span>
+<span class="nc" id="L140">    writeMessage(&quot;P2 score: &quot; + p2Score + System.lineSeparator());</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">    if (p1Score &gt; p2Score) {</span>
+<span class="nc" id="L142">      writeMessage(&quot;P1 WIN&quot; + System.lineSeparator());</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">    } else if (p2Score &gt; p1Score) {</span>
+<span class="nc" id="L144">      writeMessage(&quot;P2 WIN&quot; + System.lineSeparator());</span>
+    } else {
+<span class="nc" id="L146">      writeMessage(&quot;Tie Game No Winner&quot; + System.lineSeparator());</span>
+    }
+<span class="nc" id="L148">    farewellMessage();</span>
+<span class="nc" id="L149">  }</span>
+
+  private void writeMessage(String message) throws IllegalStateException {
+    try {
+<span class="nc" id="L153">      builder.append(message);</span>
+
+<span class="nc" id="L155">    } catch (IOException e) {</span>
+<span class="nc" id="L156">      throw new IllegalStateException(e.getMessage());</span>
+<span class="nc" id="L157">    }</span>
+<span class="nc" id="L158">  }</span>
+
+  private void welcomeMessage() throws IllegalStateException {
+<span class="nc" id="L161">    writeMessage(&quot;Welcome to Sanguine (Queens Blood)!&quot; + System.lineSeparator());</span>
+<span class="nc" id="L162">  }</span>
+
+  private void farewellMessage() throws IllegalStateException {
+<span class="nc" id="L165">    writeMessage(&quot;Thank you for using playing!&quot;);</span>
+<span class="nc" id="L166">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

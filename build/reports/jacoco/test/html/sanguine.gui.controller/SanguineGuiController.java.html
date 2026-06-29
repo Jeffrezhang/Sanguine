@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SanguineGuiController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">f25-hw07-groups-group-SixSevenMonsters</a> &gt; <a href="index.source.html" class="el_package">sanguine.gui.controller</a> &gt; <span class="el_source">SanguineGuiController.java</span></div><h1>SanguineGuiController.java</h1><pre class="source lang-java linenums">package sanguine.gui.controller;
+
+import sanguine.gui.player.GamePlayer;
+import sanguine.gui.player.PlayerActionListener;
+import sanguine.gui.view.SanguineGuiView;
+import sanguine.model.Card;
+import sanguine.model.ReadOnlySanguineModel;
+
+
+/**
+ * The main GUI controller for the Sanguine game.
+ */
+public class SanguineGuiController implements GuiClickListener, PlayerActionListener {
+
+  private final int playerId;
+  private final boolean isHuman;
+
+  private final SanguineGuiView view;
+  private final ProxySanguineModel proxy;
+  private final ReadOnlySanguineModel&lt;Card&gt; model;
+  private final GamePlayer player;
+  private TurnListener turnListener;
+
+  private boolean myTurn;
+<span class="nc" id="L25">  private int selectedCardIndex = -1;</span>
+<span class="nc" id="L26">  private int pendingRow = -1;</span>
+<span class="nc" id="L27">  private int pendingCol = -1;</span>
+
+
+  /**
+   * Constructor for the gui Controller. Takes in the gui view of sanguine alongside the
+   * read only model and proxy model.
+   *
+   * @param view the gui view of sanguine
+   * @param model the read only model of sanguine
+   * @param proxy the proxy model of sanguine
+   */
+  public SanguineGuiController(int playerId,
+                               boolean isHuman,
+                               SanguineGuiView view,
+                               ReadOnlySanguineModel&lt;Card&gt; model,
+                               ProxySanguineModel proxy,
+<span class="nc" id="L43">                               GamePlayer player) {</span>
+
+<span class="nc" id="L45">    this.playerId = playerId;</span>
+<span class="nc" id="L46">    this.isHuman = isHuman;</span>
+<span class="nc" id="L47">    this.view = view;</span>
+<span class="nc" id="L48">    this.model = model;</span>
+<span class="nc" id="L49">    this.proxy = proxy;</span>
+<span class="nc" id="L50">    this.player = player;</span>
+
+<span class="nc" id="L52">    this.view.setClickListener(this);</span>
+<span class="nc" id="L53">    this.player.setActionListener(this);</span>
+<span class="nc" id="L54">    this.view.setActivePlayer(playerId);</span>
+<span class="nc" id="L55">    this.view.setSelectedCardIndex(-1);</span>
+<span class="nc" id="L56">    this.view.render();</span>
+<span class="nc" id="L57">  }</span>
+
+  /**
+   * Sets the listener for the controller.
+   *
+   * @param listener the listener that the controllers listener is being set to.
+   */
+  public void setTurnListener(TurnListener listener) {
+<span class="nc" id="L65">    this.turnListener = listener;</span>
+<span class="nc" id="L66">  }</span>
+
+  /**
+   * Called by some game coordinator when it becomes this player's turn.
+   */
+  public void beginTurn() {
+<span class="nc bnc" id="L72" title="All 2 branches missed.">    if (model.isGameOver()) {</span>
+<span class="nc" id="L73">      checkGameOver();</span>
+<span class="nc" id="L74">      return;</span>
+    }
+
+<span class="nc" id="L77">    myTurn = true;</span>
+<span class="nc" id="L78">    selectedCardIndex = -1;</span>
+<span class="nc" id="L79">    pendingRow = -1;</span>
+<span class="nc" id="L80">    pendingCol = -1;</span>
+
+<span class="nc" id="L82">    view.setActivePlayer(playerId);</span>
+<span class="nc" id="L83">    view.setSelectedCardIndex(-1);</span>
+<span class="nc" id="L84">    view.getBoardPanel().clearHighlight();</span>
+<span class="nc" id="L85">    view.render();</span>
+
+    // Notify the player object (AI will compute a move; human usually does nothing here)
+<span class="nc" id="L88">    player.onYourTurn();</span>
+<span class="nc" id="L89">  }</span>
+
+  /**
+   * Called when this player is no longer the active player.
+   * A coordinator should call beginTurn() on the other player's controller.
+   */
+  public void endTurn() {
+<span class="nc" id="L96">    myTurn = false;</span>
+<span class="nc" id="L97">    selectedCardIndex = -1;</span>
+<span class="nc" id="L98">    pendingRow = -1;</span>
+<span class="nc" id="L99">    pendingCol = -1;</span>
+<span class="nc" id="L100">    view.getBoardPanel().clearHighlight();</span>
+<span class="nc" id="L101">    view.setSelectedCardIndex(-1);</span>
+<span class="nc" id="L102">    view.render();</span>
+<span class="nc" id="L103">  }</span>
+
+  @Override
+  public void onCardClicked(int cardIndex) {
+
+<span class="nc" id="L108">    System.out.println(&quot;Card clicked, index = &quot; + cardIndex);</span>
+    // Ignore if it's not this player's turn, or if this is actually an AI player.
+<span class="nc bnc" id="L110" title="All 4 branches missed.">    if (!myTurn || !isHuman) {</span>
+<span class="nc" id="L111">      return;</span>
+    }
+
+<span class="nc bnc" id="L114" title="All 4 branches missed.">    if (cardIndex &lt; 0 || cardIndex &gt;= model.getHand(playerId).size()) {</span>
+<span class="nc" id="L115">      view.showMessage(&quot;Invalid card selection.&quot;);</span>
+<span class="nc" id="L116">      return;</span>
+    }
+
+<span class="nc" id="L119">    selectedCardIndex = cardIndex;</span>
+<span class="nc" id="L120">    pendingRow = -1;</span>
+<span class="nc" id="L121">    pendingCol = -1;</span>
+
+<span class="nc" id="L123">    Card card = model.getHand(playerId).get(cardIndex);</span>
+<span class="nc" id="L124">    view.setSelectedCardIndex(cardIndex);</span>
+<span class="nc" id="L125">    view.showMessage(&quot;Selected card: &quot; + card.getName());</span>
+<span class="nc" id="L126">    view.render();</span>
+<span class="nc" id="L127">  }</span>
+
+  @Override
+  public void onBoardClicked(int row, int col) {
+<span class="nc bnc" id="L131" title="All 4 branches missed.">    if (!myTurn || !isHuman) {</span>
+<span class="nc" id="L132">      return;</span>
+    }
+
+<span class="nc bnc" id="L135" title="All 2 branches missed.">    if (selectedCardIndex == -1) {</span>
+<span class="nc" id="L136">      System.out.println(&quot;No card selected when board clicked.&quot;);</span>
+<span class="nc" id="L137">      view.showMessage(&quot;No card selected.&quot;);</span>
+<span class="nc" id="L138">      return;</span>
+    }
+
+    // First click on a cell = &quot;preview&quot; / legality check + highlight
+<span class="nc bnc" id="L142" title="All 2 branches missed.">    if (pendingRow == -1) {</span>
+<span class="nc" id="L143">      boolean legal = proxy.isLegalPlacement(playerId, selectedCardIndex, row, col);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">      if (!legal) {</span>
+<span class="nc" id="L145">        view.showMessage(&quot;Illegal placement: not enough pawns or cell blocked.&quot;);</span>
+<span class="nc" id="L146">        return;</span>
+      }
+
+<span class="nc" id="L149">      pendingRow = row;</span>
+<span class="nc" id="L150">      pendingCol = col;</span>
+<span class="nc" id="L151">      view.getBoardPanel().setHighlight(row, col);</span>
+<span class="nc" id="L152">      view.showMessage(&quot;Click again to confirm placement at (&quot; + row + &quot;,&quot; + col + &quot;).&quot;);</span>
+<span class="nc" id="L153">      return;</span>
+    }
+
+<span class="nc bnc" id="L156" title="All 4 branches missed.">    if (pendingRow == row &amp;&amp; pendingCol == col) {</span>
+<span class="nc" id="L157">      placeCard(selectedCardIndex, row, col);</span>
+<span class="nc" id="L158">      return;</span>
+    }
+
+<span class="nc" id="L161">    pendingRow = -1;</span>
+<span class="nc" id="L162">    pendingCol = -1;</span>
+<span class="nc" id="L163">    view.getBoardPanel().clearHighlight();</span>
+<span class="nc" id="L164">    view.showMessage(&quot;Cell changed — click again to highlight.&quot;);</span>
+<span class="nc" id="L165">  }</span>
+
+  @Override
+  public void onPassClicked() {
+<span class="nc bnc" id="L169" title="All 4 branches missed.">    if (!myTurn || !isHuman) {</span>
+<span class="nc" id="L170">      return;</span>
+    }
+<span class="nc" id="L172">    handlePass();</span>
+<span class="nc" id="L173">  }</span>
+
+  @Override
+  public void onPlayCard(int cardIndex, int row, int col) {
+<span class="nc bnc" id="L177" title="All 2 branches missed.">    if (!myTurn) {</span>
+<span class="nc" id="L178">      return;</span>
+    }
+<span class="nc" id="L180">    placeCard(cardIndex, row, col);</span>
+<span class="nc" id="L181">  }</span>
+
+  @Override
+  public void onPass() {
+<span class="nc bnc" id="L185" title="All 2 branches missed.">    if (!myTurn) {</span>
+<span class="nc" id="L186">      return;</span>
+    }
+<span class="nc" id="L188">    handlePass();</span>
+<span class="nc" id="L189">  }</span>
+
+  /**
+   * Sends the place card command to the proxy model.
+   *
+   * @param row the row to place the card
+   * @param col the column to place the card
+   */
+  private void placeCard(int cardIndex, int row, int col) {
+    try {
+<span class="nc" id="L199">      proxy.placeCard(playerId, cardIndex, row, col);</span>
+<span class="nc" id="L200">    } catch (RuntimeException e) {</span>
+      // Shouldn't normally happen if we checked legality, but show it if it does.
+<span class="nc" id="L202">      view.showMessage(&quot;Invalid move: &quot; + e.getMessage());</span>
+<span class="nc" id="L203">      return;</span>
+<span class="nc" id="L204">    }</span>
+
+<span class="nc" id="L206">    view.getBoardPanel().clearHighlight();</span>
+<span class="nc" id="L207">    selectedCardIndex = -1;</span>
+<span class="nc" id="L208">    pendingRow = -1;</span>
+<span class="nc" id="L209">    pendingCol = -1;</span>
+<span class="nc" id="L210">    view.setSelectedCardIndex(-1);</span>
+<span class="nc" id="L211">    view.render();</span>
+
+<span class="nc" id="L213">    finishTurn();</span>
+<span class="nc" id="L214">  }</span>
+
+  /**
+   * Executes a pass for this player and finishes their turn.
+   */
+  private void handlePass() {
+<span class="nc" id="L220">    proxy.pass(playerId);</span>
+<span class="nc" id="L221">    view.getBoardPanel().clearHighlight();</span>
+<span class="nc" id="L222">    selectedCardIndex = -1;</span>
+<span class="nc" id="L223">    pendingRow = -1;</span>
+<span class="nc" id="L224">    pendingCol = -1;</span>
+<span class="nc" id="L225">    view.setSelectedCardIndex(-1);</span>
+<span class="nc" id="L226">    view.render();</span>
+
+<span class="nc" id="L228">    finishTurn();</span>
+<span class="nc" id="L229">  }</span>
+
+  /**
+   * Common end-of-turn logic: check for game over, otherwise notify the turnListener.
+   */
+  private void finishTurn() {
+<span class="nc" id="L235">    myTurn = false;</span>
+
+<span class="nc bnc" id="L237" title="All 2 branches missed.">    if (checkGameOver()) {</span>
+      // Game over; no next turn.
+<span class="nc" id="L239">      return;</span>
+    }
+
+<span class="nc bnc" id="L242" title="All 2 branches missed.">    if (turnListener != null) {</span>
+<span class="nc" id="L243">      turnListener.onTurnFinished(playerId);</span>
+    }
+<span class="nc" id="L245">  }</span>
+
+  /**
+   * Checks if game is over.
+   */
+  private boolean checkGameOver() {
+<span class="nc bnc" id="L251" title="All 2 branches missed.">    if (!model.isGameOver()) {</span>
+<span class="nc" id="L252">      return false;</span>
+    }
+<span class="nc" id="L254">    view.showMessage(&quot;Game Over!\n&quot;</span>
+<span class="nc" id="L255">        + &quot;Red Score: &quot; + model.getPlayerScore(1) + &quot;\n&quot;</span>
+<span class="nc" id="L256">        + &quot;Blue Score: &quot; + model.getPlayerScore(2) + &quot;\n&quot;</span>
+<span class="nc" id="L257">        + winnerText());</span>
+
+<span class="nc" id="L259">    view.setClickListener(null);</span>
+<span class="nc" id="L260">    return true;</span>
+  }
+
+  /**
+   * Creates the text to show when the game is over.
+   *
+   * @return the text created when game is over
+   */
+  private String winnerText() {
+<span class="nc" id="L269">    int r = model.getPlayerScore(1);</span>
+<span class="nc" id="L270">    int b = model.getPlayerScore(2);</span>
+
+<span class="nc bnc" id="L272" title="All 2 branches missed.">    if (r &gt; b) {</span>
+<span class="nc" id="L273">      return &quot;Winner: RED&quot;;</span>
+    }
+<span class="nc bnc" id="L275" title="All 2 branches missed.">    if (b &gt; r) {</span>
+<span class="nc" id="L276">      return &quot;Winner: BLUE&quot;;</span>
+    }
+<span class="nc" id="L278">    return &quot;It's a tie!&quot;;</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

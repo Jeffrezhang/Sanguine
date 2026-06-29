@@ -1,0 +1,98 @@
+RowScoreAi logic:
+
+For each row r = 0..2:
+
+Query myRow = model.getRowScore(r, red) and oppRow = model.getRowScore(r, blue).
+
+If myRow <= oppRow, then this row is “interesting”.
+
+For each card ci in hand:
+
+For each column c:
+
+Ask proxy.isLegalPlacement(1, ci, r, c).
+
+If legal, compute a hypothetical new score:
+
+newMyRow = myRow + cardValue(ci)
+
+If newMyRow > oppRow, accept this move and stop.
+
+If no such move exists, return a pass.
+
+We configure the mocked model and proxy as:
+
+Starting scores: all 0.
+
+For each row r: getRowScore(r, 1) = 0, getRowScore(r, 2) = 0.
+
+As before, Red’s hand is [RightA, U1, U2, U3, U4] with positive values.
+
+isLegalPlacement returns false for every position in row 0 except for cardIndex = 4, col = 4, which returns true.
+
+Because the strategy works row-by-row top-down, it will never even look at rows 1 and 2 once it finds a winning move in row 0.
+
+Full moves:
+isLegalPlacement(p=1, c=0, r=0, col=0) → false
+
+isLegalPlacement(p=1, c=0, r=0, col=1) → false
+
+isLegalPlacement(p=1, c=0, r=0, col=2) → false
+
+isLegalPlacement(p=1, c=0, r=0, col=3) → false
+
+isLegalPlacement(p=1, c=0, r=0, col=4) → false
+
+For card index 1 (U1, value 3):
+
+isLegalPlacement(p=1, c=1, r=0, col=0) → false
+
+isLegalPlacement(p=1, c=1, r=0, col=1) → false
+
+isLegalPlacement(p=1, c=1, r=0, col=2) → false
+
+isLegalPlacement(p=1, c=1, r=0, col=3) → false
+
+isLegalPlacement(p=1, c=1, r=0, col=4) → false
+
+For card index 2 (U2, value 4):
+
+isLegalPlacement(p=1, c=2, r=0, col=0) → false
+
+isLegalPlacement(p=1, c=2, r=0, col=1) → false
+
+isLegalPlacement(p=1, c=2, r=0, col=2) → false
+
+isLegalPlacement(p=1, c=2, r=0, col=3) → false
+
+isLegalPlacement(p=1, c=2, r=0, col=4) → false
+
+For card index 3 (U3, value 5):
+
+isLegalPlacement(p=1, c=3, r=0, col=0) → false
+
+isLegalPlacement(p=1, c=3, r=0, col=1) → false
+
+isLegalPlacement(p=1, c=3, r=0, col=2) → false
+
+isLegalPlacement(p=1, c=3, r=0, col=3) → false
+
+isLegalPlacement(p=1, c=3, r=0, col=4) → false
+
+For card index 4 (U4, value 2):
+
+isLegalPlacement(p=1, c=4, r=0, col=0) → false
+
+isLegalPlacement(p=1, c=4, r=0, col=1) → false
+
+isLegalPlacement(p=1, c=4, r=0, col=2) → false
+
+isLegalPlacement(p=1, c=4, r=0, col=3) → false
+
+isLegalPlacement(p=1, c=4, r=0, col=4) → true
+
+myRow = 0, oppRow = 0, cardValue(U4) = 2
+
+newMyRow = myRow + cardValue = 0 + 2 = 2
+
+2 > oppRow(0) so this move wins row 0.

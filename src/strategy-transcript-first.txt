@@ -1,0 +1,177 @@
+For each card index ci in the current hand (0..4),
+
+For each row r (0..2),
+
+For each column c (0..4),
+
+Ask proxy.isLegalPlacement(1, ci, r, c)
+
+Pick the first (ci, r, c) where this returns true.
+
+We configure MockProxyModel so that:
+
+isLegalPlacement(player=1, cardIndex, row, col) returns false for all combinations
+
+except cardIndex = 4, row = 2, col = 4, where it returns true.
+
+
+Full choice path:
+Card index 0 (RightA)
+
+isLegalPlacement(c=0, r=0, col=0) → false
+
+isLegalPlacement(c=0, r=0, col=1) → false
+
+isLegalPlacement(c=0, r=0, col=2) → false
+
+isLegalPlacement(c=0, r=0, col=3) → false
+
+isLegalPlacement(c=0, r=0, col=4) → false
+
+isLegalPlacement(c=0, r=1, col=0) → false
+
+isLegalPlacement(c=0, r=1, col=1) → false
+
+isLegalPlacement(c=0, r=1, col=2) → false
+
+isLegalPlacement(c=0, r=1, col=3) → false
+
+isLegalPlacement(c=0, r=1, col=4) → false
+
+isLegalPlacement(c=0, r=2, col=0) → false
+
+isLegalPlacement(c=0, r=2, col=1) → false
+
+isLegalPlacement(c=0, r=2, col=2) → false
+
+isLegalPlacement(c=0, r=2, col=3) → false
+
+isLegalPlacement(c=0, r=2, col=4) → false
+
+Card index 1 (U1)
+
+isLegalPlacement(c=1, r=0, col=0) → false
+
+isLegalPlacement(c=1, r=0, col=1) → false
+
+isLegalPlacement(c=1, r=0, col=2) → false
+
+isLegalPlacement(c=1, r=0, col=3) → false
+
+isLegalPlacement(c=1, r=0, col=4) → false
+
+isLegalPlacement(c=1, r=1, col=0) → false
+
+isLegalPlacement(c=1, r=1, col=1) → false
+
+isLegalPlacement(c=1, r=1, col=2) → false
+
+isLegalPlacement(c=1, r=1, col=3) → false
+
+isLegalPlacement(c=1, r=1, col=4) → false
+
+isLegalPlacement(c=1, r=2, col=0) → false
+
+isLegalPlacement(c=1, r=2, col=1) → false
+
+isLegalPlacement(c=1, r=2, col=2) → false
+
+isLegalPlacement(c=1, r=2, col=3) → false
+
+isLegalPlacement(c=1, r=2, col=4) → false
+
+Card index 2 (U2)
+
+isLegalPlacement(c=2, r=0, col=0) → false
+
+isLegalPlacement(c=2, r=0, col=1) → false
+
+isLegalPlacement(c=2, r=0, col=2) → false
+
+isLegalPlacement(c=2, r=0, col=3) → false
+
+isLegalPlacement(c=2, r=0, col=4) → false
+
+isLegalPlacement(c=2, r=1, col=0) → false
+
+isLegalPlacement(c=2, r=1, col=1) → false
+
+isLegalPlacement(c=2, r=1, col=2) → false
+
+isLegalPlacement(c=2, r=1, col=3) → false
+
+isLegalPlacement(c=2, r=1, col=4) → false
+
+isLegalPlacement(c=2, r=2, col=0) → false
+
+isLegalPlacement(c=2, r=2, col=1) → false
+
+isLegalPlacement(c=2, r=2, col=2) → false
+
+isLegalPlacement(c=2, r=2, col=3) → false
+
+isLegalPlacement(c=2, r=2, col=4) → false
+
+Card index 3 (U3)
+
+isLegalPlacement(c=3, r=0, col=0) → false
+
+isLegalPlacement(c=3, r=0, col=1) → false
+
+isLegalPlacement(c=3, r=0, col=2) → false
+
+isLegalPlacement(c=3, r=0, col=3) → false
+
+isLegalPlacement(c=3, r=0, col=4) → false
+
+isLegalPlacement(c=3, r=1, col=0) → false
+
+isLegalPlacement(c=3, r=1, col=1) → false
+
+isLegalPlacement(c=3, r=1, col=2) → false
+
+isLegalPlacement(c=3, r=1, col=3) → false
+
+isLegalPlacement(c=3, r=1, col=4) → false
+
+isLegalPlacement(c=3, r=2, col=0) → false
+
+isLegalPlacement(c=3, r=2, col=1) → false
+
+isLegalPlacement(c=3, r=2, col=2) → false
+
+isLegalPlacement(c=3, r=2, col=3) → false
+
+isLegalPlacement(c=3, r=2, col=4) → false
+
+Card index 4 (U4)
+
+isLegalPlacement(c=4, r=0, col=0) → false
+
+isLegalPlacement(c=4, r=0, col=1) → false
+
+isLegalPlacement(c=4, r=0, col=2) → false
+
+isLegalPlacement(c=4, r=0, col=3) → false
+
+isLegalPlacement(c=4, r=0, col=4) → false
+
+isLegalPlacement(c=4, r=1, col=0) → false
+
+isLegalPlacement(c=4, r=1, col=1) → false
+
+isLegalPlacement(c=4, r=1, col=2) → false
+
+isLegalPlacement(c=4, r=1, col=3) → false
+
+isLegalPlacement(c=4, r=1, col=4) → false
+
+isLegalPlacement(c=4, r=2, col=0) → false
+
+isLegalPlacement(c=4, r=2, col=1) → false
+
+isLegalPlacement(c=4, r=2, col=2) → false
+
+isLegalPlacement(c=4, r=2, col=3) → false
+
+isLegalPlacement(c=4, r=2, col=4) → true ← first legal move
