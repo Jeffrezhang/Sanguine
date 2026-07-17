@@ -73,5 +73,6 @@ A pawn’s count is always ≥ 1.
 SanguinePawn is immutable—its fields never change.
 withCount always returns a new pawn, not the same one.
 
-##Notes
+## Notes
 - All code needed to run project can be found in src
+- Run Sanguine.java to play
