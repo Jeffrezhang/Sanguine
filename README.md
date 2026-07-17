@@ -1,7 +1,5 @@
 ******
-RUNNING THE JAR NOTE:
-- If you are copying the jar file to a separate folder, you wil also need to copy over the docs folder
--  that contains "example.deck" into that same folder. Otherwise, it should work normally.
+SANGUINE, Final part of HW project for Program and Design @ Northeastern University
 ******
 
 HW05:
